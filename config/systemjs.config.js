@@ -23,7 +23,8 @@
       '@angular/upgrade/static': 'npm:@angular/upgrade@2.4.9/bundles/upgrade-static.umd.js',
 
       // other libraries
-      'rxjs':                      'npm:rxjs@5.0.1',
+      'rxjs': 'npm:rxjs@5.2.0',
+      'lodash': 'npm:lodash@4.17.4/index.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -32,6 +33,7 @@
         defaultExtension: 'js'
       },
       rxjs: {
+        main: './Rx.js',
         defaultExtension: 'js'
       }
     }

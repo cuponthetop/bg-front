@@ -8,7 +8,7 @@ import { ConfigService } from './config.service';
     HttpModule
   ],
   declarations: [
-    ConfigService
+    // ConfigService
   ],
   providers: [
     ConfigService,
