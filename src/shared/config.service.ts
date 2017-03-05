@@ -12,10 +12,12 @@ export class ConfigService {
     return this.config;
   }
 
-  constructor(private http: Http) { };
+  constructor(private http: Http) {
+    this.config = new ReplaySubject<any>(1);
+  };
 
   load(): void {
-    this.sub = this.http.get('config.json')
+    this.sub = this.http.get('config/config.json')
       .map((res) => { return res.json() })
       .catch((error: any): any => {
         console.log('Configuration file "config.json" could not be read');
