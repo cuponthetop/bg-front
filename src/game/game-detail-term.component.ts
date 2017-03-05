@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   template: `
     <div>
       <div><span>search terms</span></div>
-      <div *ngFor="let term of game.searchTerms">
+      <div *ngFor="let term of searchTerms">
         <span>{{term.market}} </span> <span>{{term.terms}}</span>
       </div>
       <div>
@@ -22,6 +22,8 @@ export class GameDetailTermComponent implements OnInit {
   @Input()
   terms: SearchTerm[];
 
+  @Input()
+  id: string;
   constructor(private gameService: GameService) { };
 
   ngOnInit() { };

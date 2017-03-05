@@ -20,8 +20,10 @@ import { Observable } from 'rxjs';
 })
 export class GameDetailURLComponent implements OnInit {
   @Input()
-  urls: GamePage;
+  urls: GamePage[];
 
+  @Input()
+  id: string;
   constructor(private gameService: GameService) { };
 
   ngOnInit() { };
