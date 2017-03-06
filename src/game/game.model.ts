@@ -22,34 +22,6 @@ export class Game {
   searchTerms: SearchTerm[];
   urls: GamePage[];
 
-  getRepName(): string {
-    let baseNameEl: GameName = _.find(this.gamenames, (el: GameName): boolean => {
-      return el.alias === 'base';
-    });
-    if (false === _.isUndefined(baseNameEl)) {
-      return baseNameEl.name;
-    } else {
-      return '';
-    }
-  };
-
-  getNonRepNames(): GameName[] {
-    return _.filter(this.gamenames, (el: GameName): boolean => {
-      return el.alias !== 'base';
-    });
-  };
-
-  getPossibleNewMarketsForTerm(): string[] {
-    return _.differenceWith(MARKETS, this.searchTerms, (el1: string, el2: SearchTerm): boolean => {
-      return el2.market === el1;
-    });
-  };
-
-  getPossibleNewMarketsForURL(): string[] {
-    return _.differenceWith(MARKETS, this.urls, (el1: string, el2: GamePage): boolean => {
-      return el2.market === el1;
-    });
-  };
 };
 
 export const MARKETS: string[] = [
@@ -57,3 +29,33 @@ export const MARKETS: string[] = [
   'Amazon', 'CardCastle', 'Cardhaus',
   'CoolStuffInc', 'MiniatureMarket', 'PopcornEdu'
 ];
+
+
+export function getRepName(game: Game): string {
+  let baseNameEl: GameName = _.find(_.get(game, 'gamenames', []), (el: GameName): boolean => {
+    return el.alias === 'base';
+  });
+  if (false === _.isUndefined(baseNameEl)) {
+    return baseNameEl.name;
+  } else {
+    return '';
+  }
+};
+
+export function getNonRepNames(game: Game): GameName[] {
+  return _.filter(_.get(game, 'gamenames', []), (el: GameName): boolean => {
+    return el.alias !== 'base';
+  });
+};
+
+export function getPossibleNewMarketsForTerm(game: Game): string[] {
+  return _.differenceWith(MARKETS, _.get(game, 'searchTerms', []), (el1: string, el2: SearchTerm): boolean => {
+    return el2.market === el1;
+  });
+};
+
+export function getPossibleNewMarketsForURL(game: Game): string[] {
+  return _.differenceWith(MARKETS, _.get(game, 'urls', []), (el1: string, el2: GamePage): boolean => {
+    return el2.market === el1;
+  });
+};

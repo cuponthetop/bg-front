@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 
 import { GameService } from './game.service';
 // TODO:: MARKETS should be moved to its own service
-import { Game, SearchTerm, MARKETS } from './game.model';
+import { Game, SearchTerm, MARKETS, getPossibleNewMarketsForTerm } from './game.model';
 
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   template: `
     <div>
       <div><span>search terms</span></div>
-      <div *ngFor="let term of game.searchTerms">
+      <div *ngFor="let term of game?.searchTerms">
         <span>{{term.market}} </span> <span *ngFor="let termEl of term.terms">{{termEl}}</span>
 
         <button class="delete"
@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
       <div>
         <form [formGroup]="termForm">
           <select formControlName="market">
-            <option *ngFor="let market of game.getPossibleNewMarketsForTerm()" [value]="market">{{market}}</option>
+            <option *ngFor="let market of getPossibleNewMarketsForTerm()" [value]="market">{{market}}</option>
           </select>
           <label>TermToAdd:
             <input formControlName="newTerm">
@@ -49,9 +49,13 @@ export class GameDetailTermComponent implements OnInit {
       newTerm: ['', Validators.required],
       market: '',
     });
-  }
+  };
 
   delete(market: string) {
     return this.gameService.removeGameProperty(this.game.id, 'searchterm', market);
+  };
+
+  getPossibleNewMarketsForTerm(): string[] {
+    return getPossibleNewMarketsForTerm(this.game);
   };
 };

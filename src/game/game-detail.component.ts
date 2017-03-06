@@ -12,13 +12,13 @@ import { Observable } from 'rxjs';
   template: `
     <div>
       <div>
-        <game-detail-name [game]="game"></game-detail-name">
+        <game-detail-name [game]="game"></game-detail-name>
       </div>
       <div>
-        <game-detail-term [game]="game"></game-detail-term">
+        <game-detail-term [game]="game"></game-detail-term>
       </div>
       <div>
-        <game-detail-url [game]="game"></game-detail-url">
+        <game-detail-url [game]="game"></game-detail-url>
       </div>
     </div>
     `

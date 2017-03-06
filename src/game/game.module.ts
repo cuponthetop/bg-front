@@ -25,7 +25,10 @@ import { GameDetailURLComponent } from './game-detail-url.component';
     GameComponent,
     GameListComponent,
     GameListItemComponent,
-    GameDetailComponent
+    GameDetailComponent,
+    GameDetailNameComponent,
+    GameDetailTermComponent,
+    GameDetailURLComponent
   ],
   providers: [
     GameService

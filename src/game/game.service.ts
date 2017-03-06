@@ -11,25 +11,27 @@ export class GameService {
   constructor(private http: Http, private config: ConfigService) { };
 
   getGames(): Observable<Game[]> {
-    return this.http.get('http://localhost:3003/v1/game/games/').map(response => response.json() as Game[]);
+    return this.http.get('http://localhost:3003/v1/game/games/')
+      .map(response => response ? response.json() as Game[] : Observable.of<Game[]>([]));
   };
 
   getGame(id: string): Observable<Game> {
-    return this.http.get(`http://localhost:3003/v1/game/game/${id}`).map(response => response.json() as Game);
+    return this.http.get(`http://localhost:3003/v1/game/game/${id}`)
+      .map(response => response.json() as Game);
   };
 
   deleteGame(id: string): Observable<string> {
-    return this.http.delete(`http://localhost:3003/v1/game/game/${id}`).map(response => response.json() as string);
+    return this.http.delete(`http://localhost:3003/v1/game/game/${id}`)
+      .map(response => response.json() as string);
   };
 
   createGame(name: string): Observable<Game> {
     let param = {
-      gamename: name,
-      gamenameEn: name,
-      gamenameKr: name
+      gamename: name
     };
 
     return this.http.patch(`http://localhost:3003/v1/game/game/`, param)
+
       .map(response => response.json() as string)
       .flatMap(id => this.getGame(id));
   };
@@ -52,7 +54,8 @@ export class GameService {
         throw new Error(`Unsupported property type ${propertyType} `);
       }
     }
-    return this.http.post(url, propertyValue).map(response => response.json() as GameName[] | SearchTerm[] | GamePage[]);
+    return this.http.post(url, propertyValue)
+      .map(response => response.json() as GameName[] | SearchTerm[] | GamePage[]);
   };
 
   removeGameProperty(id: string, propertyType: 'name' | 'url' | 'searchterm', removeKey: string)
@@ -69,6 +72,7 @@ export class GameService {
         throw new Error(`Unsupported property type ${propertyType} `);
       }
     }
-    return this.http.delete(url).map(response => response.json() as GameName | SearchTerm | GamePage);
+    return this.http.delete(url)
+      .map(response => response.json() as GameName | SearchTerm | GamePage);
   };
 };
