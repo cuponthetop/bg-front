@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { GameService } from './game.service';
-import { GamePage } from './game.model';
+// TODO:: MARKETS should be moved to its own service
+import { Game, GamePage, MARKETS } from './game.model';
 
 import { Observable } from 'rxjs';
 
@@ -10,8 +11,11 @@ import { Observable } from 'rxjs';
   template: `
     <div>
       <div><span>urls</span></div>
-      <div *ngFor="let url of urls">
+      <div *ngFor="let url of game.urls">
         <span>{{url.market}} </span> <span>{{url.url}}</span>
+
+        <button class="delete"
+          (click)="delete(term.market); $event.stopPropagation()">x</button>
       </div>
       <div>
       </div>
@@ -20,11 +24,13 @@ import { Observable } from 'rxjs';
 })
 export class GameDetailURLComponent implements OnInit {
   @Input()
-  urls: GamePage[];
+  game: Game;
 
-  @Input()
-  id: string;
   constructor(private gameService: GameService) { };
 
   ngOnInit() { };
+
+  delete(market: string) {
+    return this.gameService.removeGameProperty(this.game.id, 'url', market);
+  };
 };

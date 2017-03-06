@@ -15,10 +15,10 @@ import { Observable } from 'rxjs';
         <game-detail-name [game]="game"></game-detail-name">
       </div>
       <div>
-        <game-detail-term [terms]="game.searchTerms" [id]="game.id"></game-detail-term">
+        <game-detail-term [game]="game"></game-detail-term">
       </div>
       <div>
-        <game-detail-url [urls]="game.urls" [id]="game.id"></game-detail-url">
+        <game-detail-url [game]="game"></game-detail-url">
       </div>
     </div>
     `

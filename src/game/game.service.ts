@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { ConfigService } from '../shared/config.service';
 import { Observable, Subscription, ReplaySubject } from 'rxjs';
 
-import { Game } from './game.model';
+import { Game, GameName, GamePage, SearchTerm } from './game.model';
 
 @Injectable()
 export class GameService {
@@ -29,7 +29,7 @@ export class GameService {
       gamenameKr: name
     };
 
-    return this.http.post(`http://localhost:3003/v1/game/game/`, param)
+    return this.http.patch(`http://localhost:3003/v1/game/game/`, param)
       .map(response => response.json() as string)
       .flatMap(id => this.getGame(id));
   };
@@ -37,4 +37,38 @@ export class GameService {
   // updateGame(name: string): Observable<Game> {
 
   // };
+
+  addGameProperty(id: string, propertyType: 'name' | 'url' | 'searchterm', propertyValue: GameName | SearchTerm | GamePage)
+    : Observable<GameName[] | SearchTerm[] | GamePage[]> {
+    let url = `http://localhost:3003/v1/game/game/${id}/`;
+    switch (propertyType) {
+      case 'name':
+      case 'searchterm':
+      case 'url': {
+        url = url + propertyType;
+        break;
+      }
+      default: {
+        throw new Error(`Unsupported property type ${propertyType} `);
+      }
+    }
+    return this.http.post(url, propertyValue).map(response => response.json() as GameName[] | SearchTerm[] | GamePage[]);
+  };
+
+  removeGameProperty(id: string, propertyType: 'name' | 'url' | 'searchterm', removeKey: string)
+    : Observable<GameName | SearchTerm | GamePage> {
+    let url = `http://localhost:3003/v1/game/game/${id}`;
+    switch (propertyType) {
+      case 'name':
+      case 'searchterm':
+      case 'url': {
+        url = `${url}/${propertyType}/${removeKey}`;
+        break;
+      }
+      default: {
+        throw new Error(`Unsupported property type ${propertyType} `);
+      }
+    }
+    return this.http.delete(url).map(response => response.json() as GameName | SearchTerm | GamePage);
+  };
 };

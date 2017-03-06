@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { GameService } from './game.service';
-import { SearchTerm } from './game.model';
+// TODO:: MARKETS should be moved to its own service
+import { Game, SearchTerm, MARKETS } from './game.model';
 
 import { Observable } from 'rxjs';
 
@@ -10,21 +12,46 @@ import { Observable } from 'rxjs';
   template: `
     <div>
       <div><span>search terms</span></div>
-      <div *ngFor="let term of searchTerms">
-        <span>{{term.market}} </span> <span>{{term.terms}}</span>
+      <div *ngFor="let term of game.searchTerms">
+        <span>{{term.market}} </span> <span *ngFor="let termEl of term.terms">{{termEl}}</span>
+
+        <button class="delete"
+          (click)="delete(term.market); $event.stopPropagation()">x</button>
       </div>
       <div>
+        <form [formGroup]="termForm">
+          <select formControlName="market">
+            <option *ngFor="let market of game.getPossibleNewMarketsForTerm()" [value]="market">{{market}}</option>
+          </select>
+          <label>TermToAdd:
+            <input formControlName="newTerm">
+          </label>
+        </form>
       </div>
     </div>
     `
 })
 export class GameDetailTermComponent implements OnInit {
   @Input()
-  terms: SearchTerm[];
+  game: Game;
 
-  @Input()
-  id: string;
-  constructor(private gameService: GameService) { };
+  termForm: FormGroup;
+
+  constructor(private gameService: GameService, private fb: FormBuilder) {
+    this.createForm();
+  };
+
 
   ngOnInit() { };
+
+  createForm() {
+    this.termForm = this.fb.group({
+      newTerm: ['', Validators.required],
+      market: '',
+    });
+  }
+
+  delete(market: string) {
+    return this.gameService.removeGameProperty(this.game.id, 'searchterm', market);
+  };
 };
