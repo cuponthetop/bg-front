@@ -70,10 +70,10 @@ export class GameDetailURLComponent implements OnInit {
 
   extractMarketFromURL(url: string): string {
     let extracted = url.match(/^(?:https?:\/\/)?(?:www\.)?([^:\/\n\.]+)(?:\.[a-z]*)/);
-    if (extracted.length === 0) {
+    if (extracted.length <= 1) {
       throw new Error('given url is not of proper http webpage url');
     }
-    let domain = _.toLower(extracted[0]);
+    let domain = _.toLower(extracted[1]);
 
     switch (domain) {
       case 'amazon':

@@ -30,8 +30,7 @@ export class GameService {
       gamename: name
     };
 
-    return this.http.patch(`http://localhost:3003/v1/game/game/`, param)
-
+    return this.http.post(`http://localhost:3003/v1/game/game/`, param)
       .map(response => response.json() as string)
       .flatMap(id => this.getGame(id));
   };
@@ -54,7 +53,7 @@ export class GameService {
         throw new Error(`Unsupported property type ${propertyType} `);
       }
     }
-    return this.http.post(url, propertyValue)
+    return this.http.patch(url, propertyValue)
       .map(response => response.json() as GameName[] | SearchTerm[] | GamePage[]);
   };
 
