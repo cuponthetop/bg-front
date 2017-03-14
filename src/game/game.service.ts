@@ -5,6 +5,8 @@ import { Observable, Subscription, ReplaySubject } from 'rxjs';
 
 import { Game, GameName, GamePage, SearchTerm } from './game.model';
 
+import * as _ from 'lodash';
+
 @Injectable()
 export class GameService {
 
@@ -41,30 +43,45 @@ export class GameService {
 
   addGameProperty(id: string, propertyType: 'name' | 'url' | 'searchterm', propertyValue: GameName | SearchTerm | GamePage)
     : Observable<GameName[] | SearchTerm[] | GamePage[]> {
-    let url = `http://localhost:3003/v1/game/game/${id}/`;
+    let url = `http://localhost:3003/v1/game/game/${id}/${propertyType}`;
+    let bodyObj = null;
     switch (propertyType) {
-      case 'name':
-      case 'searchterm':
+      case 'name': {
+        bodyObj = {
+          gamename: _.get(propertyValue, 'name', ''),
+          alias: _.get(propertyValue, 'alias', '')
+        };
+        break;
+      }
+      case 'searchterm': {
+        bodyObj = {
+          type: _.get(propertyValue, 'market', ''),
+          term: _.get(propertyValue, 'terms[0]', '')
+        };
+        break;
+      }
       case 'url': {
-        url = url + propertyType;
+        bodyObj = {
+          url: _.get(propertyValue, 'url', ''),
+          type: _.get(propertyValue, 'market', '')
+        };
         break;
       }
       default: {
         throw new Error(`Unsupported property type ${propertyType} `);
       }
     }
-    return this.http.patch(url, propertyValue)
+    return this.http.patch(url, bodyObj)
       .map(response => response.json() as GameName[] | SearchTerm[] | GamePage[]);
   };
 
   removeGameProperty(id: string, propertyType: 'name' | 'url' | 'searchterm', removeKey: string)
     : Observable<GameName | SearchTerm | GamePage> {
-    let url = `http://localhost:3003/v1/game/game/${id}`;
+    let url = `http://localhost:3003/v1/game/game/${id}/${propertyType}/${removeKey}`;
     switch (propertyType) {
       case 'name':
       case 'searchterm':
       case 'url': {
-        url = `${url}/${propertyType}/${removeKey}`;
         break;
       }
       default: {

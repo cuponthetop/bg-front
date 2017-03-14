@@ -57,7 +57,7 @@ export class GameDetailURLComponent implements OnInit {
     toAdd.url = url;
     toAdd.market = market;
 
-    return this.gameService.addGameProperty(this.game.id, 'url', toAdd);
+    return this.gameService.addGameProperty(this.game.id, 'url', toAdd).subscribe(urls => this.game.urls = urls as GamePage[]);
   };
 
   delete(market: string) {
@@ -79,10 +79,12 @@ export class GameDetailURLComponent implements OnInit {
       case 'amazon':
       case 'cardhaus':
       case 'cardcastle':
-      case 'boardpia':
         {
           return domain[0].toUpperCase() + domain.substr(1).toLowerCase();
         }
+      case 'boardpia': {
+        return 'BoardPia';
+      }
       case 'miniaturemarket': {
         return 'MiniatureMarket';
       }
