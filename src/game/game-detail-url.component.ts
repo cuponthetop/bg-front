@@ -57,11 +57,15 @@ export class GameDetailURLComponent implements OnInit {
     toAdd.url = url;
     toAdd.market = market;
 
-    return this.gameService.addGameProperty(this.game.id, 'url', toAdd).subscribe(urls => this.game.urls = urls as GamePage[]);
+    return this.gameService.addGameProperty(this.game.id, 'url', toAdd)
+      .subscribe(urls => this.game.urls = urls as GamePage[]);
   };
 
   delete(market: string) {
-    return this.gameService.removeGameProperty(this.game.id, 'url', market);
+    return this.gameService.removeGameProperty(this.game.id, 'url', market)
+      .subscribe((url: GamePage) => {
+        _.remove(this.game.urls, (el: GamePage) => el.url === url.url);
+      });
   };
 
   getPossibleNewMarketsForURL(): string[] {
@@ -78,10 +82,12 @@ export class GameDetailURLComponent implements OnInit {
     switch (domain) {
       case 'amazon':
       case 'cardhaus':
-      case 'cardcastle':
         {
           return domain[0].toUpperCase() + domain.substr(1).toLowerCase();
         }
+      case 'cardcastle': {
+        return 'CardCastle';
+      }
       case 'boardpia': {
         return 'BoardPia';
       }

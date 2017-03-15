@@ -7,6 +7,8 @@ import { Game, SearchTerm, MARKETS, getPossibleNewMarketsForTerm } from './game.
 
 import { Observable } from 'rxjs';
 
+import * as _ from 'lodash';
+
 @Component({
   selector: 'game-detail-term',
   template: `
@@ -26,6 +28,9 @@ import { Observable } from 'rxjs';
           <label>TermToAdd:
             <input formControlName="newTerm">
           </label>
+
+          <button class="create" type="button"
+            (click)="create(); $event.stopPropagation()">+</button>
         </form>
       </div>
     </div>
@@ -41,7 +46,6 @@ export class GameDetailTermComponent implements OnInit {
     this.createForm();
   };
 
-
   ngOnInit() { };
 
   createForm() {
@@ -51,8 +55,23 @@ export class GameDetailTermComponent implements OnInit {
     });
   };
 
+
+  create() {
+    let term: string = this.termForm.get('newTerm').value;
+    let market: string = this.termForm.get('market').value;
+    let toAdd: SearchTerm = new SearchTerm();
+    toAdd.terms = [term];
+    toAdd.market = market;
+
+    return this.gameService.addGameProperty(this.game.id, 'searchterm', toAdd)
+      .subscribe(searchTerms => this.game.searchTerms = searchTerms as SearchTerm[]);
+  };
+
   delete(market: string) {
-    return this.gameService.removeGameProperty(this.game.id, 'searchterm', market);
+    return this.gameService.removeGameProperty(this.game.id, 'searchterm', market)
+      .subscribe((removed: SearchTerm) => {
+        _.remove(this.game.searchTerms, (el: SearchTerm) => el.market === removed.market);
+      });
   };
 
   getPossibleNewMarketsForTerm(): string[] {
