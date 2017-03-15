@@ -39,7 +39,7 @@ export class GameDetailNameComponent implements OnInit {
   @Input()
   game: Game;
 
-  termForm: FormGroup;
+  nameForm: FormGroup;
 
   constructor(private gameService: GameService, private fb: FormBuilder) {
     this.createForm();
@@ -48,15 +48,15 @@ export class GameDetailNameComponent implements OnInit {
   ngOnInit() { };
 
   createForm() {
-    this.termForm = this.fb.group({
+    this.nameForm = this.fb.group({
       newName: ['', Validators.required],
       alias: ['', Validators.required],
     });
   };
 
   create() {
-    let alias: string = this.termForm.get('alias').value;
-    let newName: string = this.termForm.get('newName').value;
+    let alias: string = this.nameForm.get('alias').value;
+    let newName: string = this.nameForm.get('newName').value;
     let toAdd: GameName = new GameName();
     toAdd.alias = alias;
     toAdd.name = newName;

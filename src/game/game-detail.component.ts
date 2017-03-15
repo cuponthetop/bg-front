@@ -20,6 +20,9 @@ import { Observable } from 'rxjs';
       <div>
         <game-detail-url [game]="game"></game-detail-url>
       </div>
+      <div>
+        <button (click)="goBack()">Back</button>
+      </div>
     </div>
     `
 })
@@ -32,5 +35,9 @@ export class GameDetailComponent implements OnInit {
     this.route.params
       .switchMap((params: Params) => this.gameService.getGame(params['gameid']))
       .subscribe(game => this.game = game);
+  };
+
+  goBack(): void {
+    this.location.back();
   };
 };
